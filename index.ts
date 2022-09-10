@@ -4,13 +4,19 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-let map: google.maps.Map;
-
+ var infowindow;
+ var markers;
 function initMap(): void {
-  map = new google.maps.Map(document.getElementById("map") as HTMLElement, {
-    zoom: 8,
-    center: { lat: 7.8731, lng: 80.7718 },
-  });
+  const map = new google.maps.Map(
+    document.getElementById("map") as HTMLElement,
+    {
+      zoom: 8,
+      center: { lat: 7.8731, lng: 80.7718 },
+      mapTypeId: 'terrain'
+    }
+  );
+
+  infowindow = new google.maps.InfoWindow();
 
   // NOTE: This uses cross-domain XHR, and may not work on older browsers.
   map.data.loadGeoJson(
@@ -24,20 +30,25 @@ function initMap(): void {
       icon: feature.getProperty("icon")
     });
   });
-  google.maps.event.addListener(map, 'click', function(event) {
-   
-    placeMarker(event.latLng);
+
+  var infowindow = new google.maps.InfoWindow({
+    content: "hello"
   });
 
-  function placeMarker(location) {
-    console.log("on map:" + location);
-  }
-  // Set click event for each feature.
   map.data.addListener('click', function(event) {
-    console.log("on polygon:" + event.latLng.toUrlValue(6));
-    placeMarker(event.latLng);
+    let id = event.feature.getProperty('code');
+    let name = event.feature.getProperty('nickname');
+
+    let html = "<div style='float:left'><img src='http://i.stack.imgur.com/g672i.png'></div><div style='float:right; padding: 10px;'><b>"+id+"</b><br/>"+name+"</div>"
+    infowindow.setContent(html);
+    infowindow.setPosition(event.latLng);
+    infowindow.setOptions({
+      pixelOffset: new google.maps.Size(0, -34)
+    }); // move the infowindow up slightly to the top of the marker icon
+    infowindow.open(map);
+
   });
-  
+   
 }
 
 declare global {
