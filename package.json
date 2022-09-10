@@ -31,5 +31,8 @@
     "vite": "^2.9.9"
   },
   "private": true,
-  "dependencies": {}
+  "dependencies": {
+    "bootstrap": "^5.2.1",
+    "startbootstrap-simple-sidebar": "^6.0.5"
+  }
 }
